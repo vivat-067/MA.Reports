@@ -14,6 +14,7 @@ uses
   cxGridDBTableView, cxGridCustomView, cxGrid, dxLayoutControlAdapters, System.StrUtils,
   Vcl.Menus, Vcl.StdCtrls, cxButtons, cxMRUEdit, marBrigadeReportController,
   System.Actions, Vcl.ActnList, FireDAC.Comp.Client,cxCurrencyEdit,
+  dxGDIPlusClasses,
   marResourcesDM,
   marBrigadeReportFilter;
 
@@ -92,6 +93,11 @@ implementation
 uses
   marExportGridToExcel, marConverters, marUtils;
 
+
+resourcestring
+  rsWaitPlease = 'Идёт подготовка отчёта. Это может занять некоторое время...';
+  rsNoData = 'Нет данных для отображения. Задайте параметры отчета и нажмите кнопку "Сформировать"...';
+
 { TfraBrigadeReport }
 
 procedure TfraBrigadeReport.Init(AConnection: TFDConnection);
@@ -100,6 +106,7 @@ begin
   FReportController := TBrigadeReportController.Create(AConnection);
   FReportFilter := TBrigadeReportFilter.Create;
 
+  gvReport.OptionsView.NoDataToDisplayInfoText := rsNoData;
   gvReport.DataController.DataSource := FReportController.DataSource;
 
   FillEmpRoleCombo;
@@ -133,14 +140,16 @@ begin
     Exit;
   end;
 
+     grReport.LockedStateImageOptions.Text := rsWaitPlease;
+     grReport.LockedStateImageOptions.ShowText := True;
 
-  gvReport.BeginUpdate;
-  try
-    if not FReportController.GenerateReport(FReportFilter) then
-      ShowMessage(FReportController.ErrorStr);
-  finally
-    gvReport.EndUpdate;
-  end;
+      gvReport.BeginUpdate(lsimImmediate);
+      try
+        if not FReportController.GenerateReport(FReportFilter) then
+          ShowMessage(FReportController.ErrorStr);
+      finally
+        gvReport.EndUpdate;
+      end;
 
 end;
 
