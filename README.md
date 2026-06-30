@@ -68,5 +68,14 @@ Path=W:\FDB\SYSTEM200626.FDB
 CharacterSet=UTF8
 ```
 
+### Дополнительно/Additional
+Код данного проекта предоставлен как прототоип исключительно для демонстрации навыков разработки в рамках тестового задания.   
+This project code is provided solely to demonstrate development skills as evaluation part of a test assignment.
+   
+#### Контакты
+
+Автор: Vit Vatkov  
+Email: [vivat-067@mail.ru](mailto:vivat-067@mail.ru)
+
 
 
