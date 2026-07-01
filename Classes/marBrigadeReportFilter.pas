@@ -22,10 +22,16 @@ type
     EmployeeRole: TEmployeeRole;
 
     constructor Create;
+    procedure Assign(Source: TBrigadeReportFilter);
+
     function IsValid(out AErrorMsg: string): Boolean;
   end;
 
 implementation
+
+resourcestring
+  rsInvalidDateSelection = 'Дата начала периода не может быть больше даты окончания.';
+  rsInvalidBlankDateInput = 'Необходимо заполнить период дат.';
 
 constructor TBrigadeReportFilter.Create;
 begin
@@ -36,17 +42,28 @@ begin
   EmployeeName := string.Empty;
 end;
 
+procedure TBrigadeReportFilter.Assign(Source: TBrigadeReportFilter);
+begin
+ if Source <> nil then
+  begin
+    Self.PeriodStart :=  Source.PeriodStart;
+    Self.PeriodEnd :=    Source.PeriodEnd;
+    Self.EmployeeName := Source.EmployeeName;
+    Self.EmployeeRole := Source.EmployeeRole;
+  end;
+end;
+
 function TBrigadeReportFilter.IsValid(out AErrorMsg: string): Boolean;
 begin
   Result := False;
   if (PeriodStart = 0) or (PeriodEnd = 0) then
   begin
-    AErrorMsg := 'Необходимо заполнить период дат.';
+    AErrorMsg := rsInvalidBlankDateInput;
     Exit;
   end;
   if PeriodStart > PeriodEnd then
   begin
-    AErrorMsg := 'Дата начала периода не может быть больше даты окончания.';
+    AErrorMsg := rsInvalidDateSelection;
     Exit;
   end;
   Result := True;
