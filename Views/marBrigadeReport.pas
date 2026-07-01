@@ -20,6 +20,7 @@ uses
 
 const
     cReportName = 'Отчет по сотрудникам бригады';
+    cFiletrConfigFileName = 'ReportFiterSettings.json';
 
 type
   TfraBrigadeReport = class(TFrame)
@@ -75,6 +76,8 @@ type
 
     procedure GetFilter;
     procedure SetFilter;
+    function GetReportFilterPath:string;
+
     procedure FillEmpRoleCombo;
 
   public
@@ -82,6 +85,8 @@ type
     function ReportName: string;
 
     procedure Init(AConnection: TFDConnection);
+    procedure Done;
+
     destructor Destroy; override;
   end;
 
@@ -114,6 +119,16 @@ begin
 
 end;
 
+procedure TfraBrigadeReport.Done;
+begin
+  if FReportFilter <> nil then
+  begin
+    GetFilter;
+    FReportFilter.SaveToFile(GetReportFilterPath);
+  end;
+end;
+
+
 destructor TfraBrigadeReport.Destroy;
 begin
   FreeAndNil(FReportFilter);
@@ -121,6 +136,7 @@ begin
 
   inherited;
 end;
+
 
 function TfraBrigadeReport.ReportName: string;
 begin
@@ -224,8 +240,14 @@ begin
   end;
 end;
 
+function TfraBrigadeReport.GetReportFilterPath: string;
+begin
+   Result := TPath.Combine(ExtractFilePath(ParamStr(0)), cFiletrConfigFileName);
+end;
+
 procedure TfraBrigadeReport.SetFilter;
 begin
+  FReportFilter.LoadFromFile(GetReportFilterPath);
   with FReportFilter do
   begin
     dePeriodStart.Date := PeriodStart;

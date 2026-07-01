@@ -3,7 +3,8 @@
 interface
 
 uses
-  System.SysUtils;
+  System.SysUtils, System.IOUtils, System.JSON.Serializers, System.JSON.Converters;
+
 
 type
   TEmployeeRole = (erAll, erDoctor, erParamedic, erDriver);
@@ -13,19 +14,34 @@ const
 
 type
 
+  [JsonSerialize(TJsonMemberSerialization.Public)]
   TBrigadeReportFilter = class
+  private
+    FPeriodStart: TDateTime;
+    FPeriodEnd: TDateTime;
+    FEmployeeName: string;
+    FEmployeeRole: TEmployeeRole;
   public
-    PeriodStart: TDateTime;
-    PeriodEnd: TDateTime;
+    [JsonProperty('period_start')]
+    property PeriodStart: TDateTime read FPeriodStart write FPeriodStart;
 
-    EmployeeName: string;
-    EmployeeRole: TEmployeeRole;
+    [JsonProperty('period_end')]
+    property PeriodEnd: TDateTime read FPeriodEnd write FPeriodEnd;
+
+    [JsonProperty('employee_name')]
+    property EmployeeName: string read FEmployeeName write FEmployeeName;
+
+    [JsonProperty('employee_role')]
+    property EmployeeRole: TEmployeeRole read FEmployeeRole write FEmployeeRole;
+
+    procedure LoadFromFile(const AFileName: string);
+    procedure SaveToFile(const AFileName: string);
+    function IsValid(out AErrorMsg: string): Boolean;
 
     constructor Create;
     procedure Assign(Source: TBrigadeReportFilter);
-
-    function IsValid(out AErrorMsg: string): Boolean;
   end;
+
 
 implementation
 
@@ -67,6 +83,38 @@ begin
     Exit;
   end;
   Result := True;
+end;
+
+procedure TBrigadeReportFilter.LoadFromFile(const AFileName: string);
+begin
+  if not TFile.Exists(AFileName) then Exit;
+
+  var Serializer := TJsonSerializer.Create;
+  try
+    var JsonText := TFile.ReadAllText(AFileName, TEncoding.UTF8);
+    var TempFilter := Serializer.Deserialize<TBrigadeReportFilter>(JsonText);
+
+    if TempFilter <> nil then
+    try
+      Self.Assign(TempFilter);
+    finally
+      TempFilter.Free;
+    end;
+  finally
+    Serializer.Free;
+  end;
+
+end;
+
+procedure TBrigadeReportFilter.SaveToFile(const AFileName: string);
+begin
+ var Serializer := TJsonSerializer.Create;
+  try
+    var JsonText := Serializer.Serialize(Self);
+    TFile.WriteAllText(AFileName, JsonText, TEncoding.UTF8);
+  finally
+    Serializer.Free;
+  end;
 end;
 
 end.
