@@ -66,7 +66,9 @@ var
 implementation
 
 uses
-  marUtils, marAppVersionInfo;
+  marUtils,
+  marAppVersionInfo,
+  marSettingsEditor;
 
 {$R *.dfm}
 
@@ -154,12 +156,20 @@ end;
 
 procedure TfrmMain.acSettingsEditorExecute(Sender: TObject);
 begin
-  //
+ var frmSettingsEditor := TfrmSettingsEditor.Create(nil);
+  try
+    if frmSettingsEditor.ShowModal = mrOk then
+    begin
+       //
+    end;
+  finally
+    FreeAndNil(frmSettingsEditor);
+  end;
 end;
 
 procedure TfrmMain.acSettingsEditorUpdate(Sender: TObject);
 begin
-   //
+  (Sender as TAction).Enabled := not FMainController.isDBConnected;
 end;
 
 initialization

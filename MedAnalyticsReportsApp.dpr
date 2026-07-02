@@ -15,7 +15,11 @@ uses
   marResourcesDM in 'Resources\marResourcesDM.pas' {dmResources: TDataModule},
   marAppVersionInfo in 'Helpers\marAppVersionInfo.pas',
   MedAnalyticsReportsApp.dxSettings in 'MedAnalyticsReportsApp.dxSettings.pas',
-  marFilterStorageService in 'Services\marFilterStorageService.pas';
+  marFilterStorageService in 'Services\marFilterStorageService.pas',
+  marSettingsEditor in 'Views\marSettingsEditor.pas' {frmSettingsEditor},
+  marDatabaseSettings in 'Models\marDatabaseSettings.pas',
+  marSettingsStorageService in 'Services\marSettingsStorageService.pas',
+  marSettingsEditorController in 'Classes\marSettingsEditorController.pas';
 
 {$R *.res}
 
@@ -26,5 +30,6 @@ begin
   Application.CreateForm(TdmDB, dmDB);
   Application.CreateForm(TfrmMain, frmMain);
   Application.CreateForm(TdmResources, dmResources);
+  Application.CreateForm(TfrmSettingsEditor, frmSettingsEditor);
   Application.Run;
 end.

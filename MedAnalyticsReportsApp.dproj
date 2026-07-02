@@ -131,6 +131,13 @@
         <DCCReference Include="Helpers\marAppVersionInfo.pas"/>
         <DCCReference Include="MedAnalyticsReportsApp.dxSettings.pas"/>
         <DCCReference Include="Services\marFilterStorageService.pas"/>
+        <DCCReference Include="Views\marSettingsEditor.pas">
+            <Form>frmSettingsEditor</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Models\marDatabaseSettings.pas"/>
+        <DCCReference Include="Services\marSettingsStorageService.pas"/>
+        <DCCReference Include="Classes\marSettingsEditorController.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

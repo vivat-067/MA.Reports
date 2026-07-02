@@ -4,7 +4,8 @@ interface
 
 uses
   System.SysUtils, System.IOUtils, FireDAC.Comp.Client, FireDAC.Phys.FB,
-  FireDAC.Phys.FBDef, FireDAC.Stan.Intf, System.IniFiles, Vcl.Dialogs, marUtils;
+  FireDAC.Phys.FBDef, FireDAC.Stan.Intf, System.IniFiles, Vcl.Dialogs,
+  marDatabaseSettings, marSettingsStorageService, marUtils;
 
 type
   TDBConnectionService = class
@@ -21,7 +22,7 @@ var
   ConfigFile: TIniFile;
 begin
   if (AConnection = nil) or (ALink = nil) then
-     Exit;
+    Exit;
 
   ALink.VendorLib := GetAppConfigPath(TPath.Combine('fbclient', 'fbclient.dll'));
 
@@ -31,14 +32,16 @@ begin
   AConnection.Params.Values['DriverID'] := 'FB';
   AConnection.Params.Values['Protocol'] := 'TCPIP';
 
-  ConfigFile := TIniFile.Create(GetAppConfigPath('settings.config'));
+  var Settings := TDatabaseSettings.Create;
   try
-    AConnection.Params.Values['Server'] := ConfigFile.ReadString('Database', 'Server', 'localhost');
-    AConnection.Params.Values['Port'] := ConfigFile.ReadString('Database', 'Port', '3050');
-    AConnection.Params.Values['Database'] := ConfigFile.ReadString('Database', 'Path', 'W:\FDB\SYSTEM200626.FDB');
-    AConnection.Params.Values['CharacterSet'] := ConfigFile.ReadString('Database', 'CharacterSet', 'UTF8');
+    TSettingsStorageService.Load(Settings);
+
+    AConnection.Params.Values['Server'] := Settings.Server;
+    AConnection.Params.Values['Port'] := Settings.Port;
+    AConnection.Params.Values['Database'] := Settings.DatabasePath;
+    AConnection.Params.Values['CharacterSet'] := Settings.CharacterSet;
   finally
-    ConfigFile.Free;
+    Settings.Free;
   end;
 
   AConnection.Params.Values['User_Name'] := 'SYSDBA';
@@ -48,7 +51,6 @@ begin
 
   AConnection.LoginPrompt := False;
 end;
-
 
 end.
 
