@@ -3,12 +3,17 @@
 interface
 
 uses
-  System.SysUtils, System.Classes, System.IOUtils, Data.DB, FireDAC.Comp.Client,
-  FireDAC.Stan.Error, FireDAC.DApt, Vcl.Dialogs, marBrigadeReportFilter,
-  marUtils;
+  System.SysUtils, System.Classes, System.IOUtils, Data.DB,  System.Threading,
+  FireDAC.Comp.Client, FireDAC.Stan.Option,  FireDAC.Stan.Intf, FireDAC.Stan.Error, FireDAC.DApt,
+  Vcl.Dialogs,
+  marBrigadeReportFilter,  marUtils;
 
 const
   cReportSQLTemplate = 'T_BrigadeReport.sql';
+
+  cRoleID_Doctor    = 4;
+  cRoleID_Paramedic = 5;
+  cRoleID_Driver    = 6;
 
 type
   TBrigadeReportController = class
@@ -17,10 +22,14 @@ type
     FDataSource: TDataSource;
     FFilter: TBrigadeReportFilter;
     FErrorStr: string;
+    FisLoading:boolean;
     procedure PrepareSQL;
   public
-    function GenerateReport(AFilter: TBrigadeReportFilter): Boolean;
     property ErrorStr: string read FErrorStr;
+    property IsLoading: Boolean read FIsLoading;
+
+    function GenerateReport(AFilter: TBrigadeReportFilter): Boolean;
+    procedure GenerateReportAsync(AFilter: TBrigadeReportFilter; AOnComplete: TProc<Boolean>);
 
     property DataSource: TDataSource read FDataSource;
 
@@ -46,6 +55,7 @@ begin
   FDataSource.DataSet := FQuery;
 
   FErrorStr := '';
+  FIsLoading := False;
 end;
 
 destructor TBrigadeReportController.Destroy;
@@ -86,6 +96,68 @@ begin
   end;
 end;
 
+
+procedure TBrigadeReportController.GenerateReportAsync(AFilter: TBrigadeReportFilter; AOnComplete: TProc<Boolean>);
+begin
+  if (AFilter = nil) or FIsLoading then
+  begin
+    if Assigned(AOnComplete) then AOnComplete(False);
+    Exit;
+  end;
+
+  FErrorStr := '';
+  FIsLoading := True;
+  FFilter := AFilter;
+
+  //FireDAC в неблокирующий режим для работы с фоновым потоком
+  FQuery.ResourceOptions.CmdExecMode := amNonBlocking;
+
+  FQuery.DisableControls;
+  FQuery.Close;
+
+  try
+    PrepareSQL;
+  except
+    on E: Exception do
+    begin
+      FErrorStr := E.Message;
+      FQuery.EnableControls;
+      FIsLoading := False;
+
+      if Assigned(AOnComplete) then AOnComplete(False);
+      Exit;
+    end;
+  end;
+
+  TTask.Run(
+    procedure
+    var
+      Success: Boolean;
+    begin
+      Success := False;
+      try
+        FQuery.Open; // Фоновое выполнение запроса
+        Success := True;
+      except
+        on E: Exception do
+           FErrorStr := rsGenerateError + E.Message;
+      end;
+
+      TThread.Synchronize(nil,
+        procedure
+        begin
+          FQuery.EnableControls;
+          FIsLoading := False;
+          if Assigned(AOnComplete) then
+             AOnComplete(Success);
+         end
+      );
+    end
+  );
+
+
+end;
+
 procedure TBrigadeReportController.PrepareSQL;
 begin
   var TemplatePath := GetAppConfigPath(TPath.Combine('Templates', cReportSQLTemplate));
@@ -107,16 +179,11 @@ begin
 
     //Тип (роль)
     if FFilter.EmployeeRole <> erAll then
-    begin
-      case FFilter.EmployeeRole of
-        erDoctor:
-          FQuery.ParamByName('pEmpRoleId').AsInteger := 4;
-        erParamedic:
-          FQuery.ParamByName('pEmpRoleId').AsInteger := 5;
-        erDriver:
-          FQuery.ParamByName('pEmpRoleId').AsInteger := 6;
-      end;
-    end
+       case FFilter.EmployeeRole of
+          erDoctor:     FQuery.ParamByName('pEmpRoleId').AsInteger := cRoleID_Doctor;
+          erParamedic:  FQuery.ParamByName('pEmpRoleId').AsInteger := cRoleID_Paramedic;
+          erDriver:     FQuery.ParamByName('pEmpRoleId').AsInteger := cRoleID_Driver;
+        end
     else
       FQuery.ParamByName('pEmpRoleId').Clear;
 

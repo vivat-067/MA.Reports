@@ -38,12 +38,15 @@ type
     dxSkinController1: TdxSkinController;
     panClientContainer: TcxGroupBox;
     liAppVersionInfo: TdxLayoutItem;
+    acSettingsEditor: TAction;
     procedure acDBConnectExecute(Sender: TObject);
     procedure acDBConnectUpdate(Sender: TObject);
     procedure acExitAppExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure acSettingsEditorExecute(Sender: TObject);
+    procedure acSettingsEditorUpdate(Sender: TObject);
   private
     { Private declarations }
     FMainController: TMainController;
@@ -148,6 +151,16 @@ begin
   Close;
 end;
 
+
+procedure TfrmMain.acSettingsEditorExecute(Sender: TObject);
+begin
+  //
+end;
+
+procedure TfrmMain.acSettingsEditorUpdate(Sender: TObject);
+begin
+   //
+end;
 
 initialization
   TdxVisualRefinements.LightBorders := True;

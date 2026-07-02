@@ -23,6 +23,10 @@ const
     cReportName = 'Отчет по сотрудникам бригады';
     cFiletrConfigFileName = 'ReportFiterSettings.json';
 
+    cColor_DoctorBg    = $00CCFFFF; // Желтый
+    cColor_ParamedicBg = $00FFF0E0; // Голубой
+    cColor_DriverBg    = $00E0E0FF; // Розовый
+
 type
   TfraBrigadeReport = class(TFrame)
     dxLayoutControl1: TdxLayoutControl;
@@ -162,19 +166,31 @@ begin
      grReport.LockedStateImageOptions.Text := rsWaitPlease;
      grReport.LockedStateImageOptions.ShowText := True;
 
-      gvReport.BeginUpdate(lsimImmediate);
-      try
-        if not FReportController.GenerateReport(FReportFilter) then
-          ShowMessage(FReportController.ErrorStr);
-      finally
-        gvReport.EndUpdate;
-      end;
+//      gvReport.BeginUpdate(lsimImmediate);
+//      try
+//        if not FReportController.GenerateReport(FReportFilter) then
+//          ShowMessage(FReportController.ErrorStr);
+//      finally
+//        gvReport.EndUpdate;
+//      end;
+
+    gvReport.BeginUpdate(lsimImmediate);
+
+    FReportController.GenerateReportAsync(FReportFilter,
+                      procedure(Success: Boolean)
+                      begin
+                        gvReport.EndUpdate;
+                        if not Success then
+                          ShowMessage(FReportController.ErrorStr);
+                      end
+    );
 
 end;
 
 procedure TfraBrigadeReport.acGenerateReportUpdate(Sender: TObject);
 begin
-  (Sender as TAction).Enabled := (dePeriodStart.Date > 0) and (dePeriodEnd.Date > 0);
+  (Sender as TAction).Enabled := (dePeriodStart.Date > 0) and (dePeriodEnd.Date > 0)
+                                  and not FReportController.IsLoading;
 end;
 
 procedure TfraBrigadeReport.acExportReportExecute(Sender: TObject);
@@ -188,7 +204,8 @@ end;
 
 procedure TfraBrigadeReport.acExportReportUpdate(Sender: TObject);
 begin
-  (Sender as TAction).Enabled := (gvReport.DataController.RecordCount > 0);
+  (Sender as TAction).Enabled := (gvReport.DataController.RecordCount > 0)
+                                 and not FReportController.IsLoading;
 end;
 
 procedure TfraBrigadeReport.edEmployeeNamePropertiesButtonClick(Sender: TObject);
@@ -268,9 +285,9 @@ begin
   //По роли сотрудника (gclEmpRoleID)
   if not AViewInfo.GridRecord.Selected then
     case XVarToInt(AViewInfo.GridRecord.Values[gclEmpRoleID.Index], -1) of
-      4: ACanvas.Brush.Color := $00CCFFFF; // Желтый
-      5: ACanvas.Brush.Color := $00FFF0E0; // Голубой
-      6: ACanvas.Brush.Color := $00E0E0FF; // Розовый
+      cRoleID_Doctor:    ACanvas.Brush.Color := cColor_DoctorBg;
+      cRoleID_Paramedic: ACanvas.Brush.Color := cColor_ParamedicBg;
+      cRoleID_Driver:    ACanvas.Brush.Color := cColor_DriverBg;
     end;
 
   //По значению "Время на вызовах" (gclCallTimeHrs)

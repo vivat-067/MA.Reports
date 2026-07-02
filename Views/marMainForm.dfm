@@ -185,6 +185,11 @@ object frmMain: TfrmMain
       ImageIndex = 18
       OnExecute = acExitAppExecute
     end
+    object acSettingsEditor: TAction
+      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080
+      OnExecute = acSettingsEditorExecute
+      OnUpdate = acSettingsEditorUpdate
+    end
   end
   object dxSkinController1: TdxSkinController
     SkinName = 'WXICompact'

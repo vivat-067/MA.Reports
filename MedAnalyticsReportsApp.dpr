@@ -14,7 +14,8 @@ uses
   marConverters in 'Helpers\marConverters.pas',
   marResourcesDM in 'Resources\marResourcesDM.pas' {dmResources: TDataModule},
   marAppVersionInfo in 'Helpers\marAppVersionInfo.pas',
-  MedAnalyticsReportsApp.dxSettings in 'MedAnalyticsReportsApp.dxSettings.pas';
+  MedAnalyticsReportsApp.dxSettings in 'MedAnalyticsReportsApp.dxSettings.pas',
+  marFilterStorageService in 'Services\marFilterStorageService.pas';
 
 {$R *.res}
 

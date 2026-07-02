@@ -120,7 +120,7 @@
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
         <DCCReference Include="Classes\marBrigadeReportController.pas"/>
-        <DCCReference Include="Classes\marBrigadeReportFilter.pas"/>
+        <DCCReference Include="Models\marBrigadeReportFilter.pas"/>
         <DCCReference Include="Helpers\marExportGridToExcel.pas"/>
         <DCCReference Include="Helpers\marConverters.pas"/>
         <DCCReference Include="Resources\marResourcesDM.pas">
@@ -130,6 +130,7 @@
         </DCCReference>
         <DCCReference Include="Helpers\marAppVersionInfo.pas"/>
         <DCCReference Include="MedAnalyticsReportsApp.dxSettings.pas"/>
+        <DCCReference Include="Services\marFilterStorageService.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

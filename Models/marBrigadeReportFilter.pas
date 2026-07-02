@@ -20,10 +20,6 @@ type
     FEmployeeName: string;
     FEmployeeRole: TEmployeeRole;
   public
-    constructor Create;
-    procedure Assign(Source: TBrigadeReportFilter);
-    function IsValid(out AErrorMsg: string): Boolean;
-
     [JsonProperty('period_start')]
     property PeriodStart: TDateTime read FPeriodStart write FPeriodStart;
     [JsonProperty('period_end')]
@@ -32,6 +28,12 @@ type
     property EmployeeName: string read FEmployeeName write FEmployeeName;
     [JsonProperty('employee_role')]
     property EmployeeRole: TEmployeeRole read FEmployeeRole write FEmployeeRole;
+
+
+    function IsValid(out AErrorMsg: string): Boolean;
+
+    constructor Create;
+    procedure Assign(Source: TBrigadeReportFilter);
   end;
 
 implementation
@@ -43,6 +45,7 @@ resourcestring
 constructor TBrigadeReportFilter.Create;
 begin
   inherited Create;
+
   FPeriodStart := EncodeDate(2026, 6, 15);
   FPeriodEnd := EncodeDate(2026, 6, 19);
   FEmployeeRole := erAll;
@@ -63,16 +66,19 @@ end;
 function TBrigadeReportFilter.IsValid(out AErrorMsg: string): Boolean;
 begin
   Result := False;
+
   if (FPeriodStart = 0) or (FPeriodEnd = 0) then
   begin
     AErrorMsg := rsInvalidBlankDateInput;
     Exit;
   end;
+
   if FPeriodStart > FPeriodEnd then
   begin
     AErrorMsg := rsInvalidDateSelection;
     Exit;
   end;
+
   Result := True;
 end;
 
