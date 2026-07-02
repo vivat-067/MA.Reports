@@ -16,7 +16,8 @@ uses
   System.Actions, Vcl.ActnList, FireDAC.Comp.Client,cxCurrencyEdit,
   dxGDIPlusClasses,
   marResourcesDM,
-  marBrigadeReportFilter;
+  marBrigadeReportFilter,
+  marFilterStorageService;
 
 const
     cReportName = 'Отчет по сотрудникам бригады';
@@ -111,6 +112,8 @@ begin
   FReportController := TBrigadeReportController.Create(AConnection);
   FReportFilter := TBrigadeReportFilter.Create;
 
+  TFilterStorageService.LoadFromFile(GetReportFilterPath, FReportFilter);
+
   gvReport.OptionsView.NoDataToDisplayInfoText := rsNoData;
   gvReport.DataController.DataSource := FReportController.DataSource;
 
@@ -124,7 +127,7 @@ begin
   if FReportFilter <> nil then
   begin
     GetFilter;
-    FReportFilter.SaveToFile(GetReportFilterPath);
+    TFilterStorageService.SaveToFile(GetReportFilterPath, FReportFilter);
   end;
 end;
 
@@ -247,7 +250,6 @@ end;
 
 procedure TfraBrigadeReport.SetFilter;
 begin
-  FReportFilter.LoadFromFile(GetReportFilterPath);
   with FReportFilter do
   begin
     dePeriodStart.Date := PeriodStart;

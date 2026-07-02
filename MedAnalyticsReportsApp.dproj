@@ -83,9 +83,9 @@
         <Icon_MainIcon>Resources\marApp.ico</Icon_MainIcon>
         <VerInfo_MajorVer>2026</VerInfo_MajorVer>
         <VerInfo_MinorVer>6</VerInfo_MinorVer>
-        <VerInfo_Release>630</VerInfo_Release>
-        <VerInfo_Build>1511</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=vivat-067@mail.ru;FileDescription=$(MSBuildProjectName);FileVersion=2026.6.630.1511;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Release>701</VerInfo_Release>
+        <VerInfo_Build>1620</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=vivat-067@mail.ru;FileDescription=$(MSBuildProjectName);FileVersion=2026.6.701.1620;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <DCC_DcuOutput>.\$(Platform)\$(Config)\dcu</DCC_DcuOutput>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">

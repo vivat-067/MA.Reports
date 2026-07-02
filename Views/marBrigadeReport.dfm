@@ -277,7 +277,7 @@ object fraBrigadeReport: TfraBrigadeReport
       AlignVert = avTop
       CaptionOptions.Text = #1087#1086':'
       Control = dePeriodEnd
-      ControlOptions.OriginalHeight = 27
+      ControlOptions.OriginalHeight = 23
       ControlOptions.OriginalWidth = 121
       ControlOptions.ShowBorder = False
       Index = 2
@@ -286,7 +286,7 @@ object fraBrigadeReport: TfraBrigadeReport
       Parent = lgFilter
       CaptionOptions.Text = #1058#1080#1087' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072':'
       Control = cmbEmloyeeRole
-      ControlOptions.OriginalHeight = 27
+      ControlOptions.OriginalHeight = 23
       ControlOptions.OriginalWidth = 121
       ControlOptions.ShowBorder = False
       Index = 4
@@ -326,7 +326,7 @@ object fraBrigadeReport: TfraBrigadeReport
       Parent = lgFilter
       CaptionOptions.Text = #1057#1086#1090#1088#1091#1076#1085#1080#1082':'
       Control = edEmployeeName
-      ControlOptions.OriginalHeight = 27
+      ControlOptions.OriginalHeight = 23
       ControlOptions.OriginalWidth = 200
       ControlOptions.ShowBorder = False
       Index = 3
