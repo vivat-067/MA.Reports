@@ -4,7 +4,7 @@ interface
 
 uses
   System.SysUtils, System.IOUtils, FireDAC.Comp.Client, FireDAC.Phys.FB,
-  FireDAC.Phys.FBDef, FireDAC.Stan.Intf, System.IniFiles, Vcl.Dialogs,
+  FireDAC.Phys.FBDef, FireDAC.Stan.Intf,
   marDatabaseSettings, marSettingsStorageService, marUtils;
 
 type
@@ -18,8 +18,6 @@ implementation
 { TDBConnectionService }
 
 class procedure TDBConnectionService.ConfigureConnection(AConnection: TFDConnection; ALink: TFDPhysFBDriverLink);
-var
-  ConfigFile: TIniFile;
 begin
   if (AConnection = nil) or (ALink = nil) then
     Exit;
@@ -40,6 +38,9 @@ begin
     AConnection.Params.Values['Port'] := Settings.Port;
     AConnection.Params.Values['Database'] := Settings.DatabasePath;
     AConnection.Params.Values['CharacterSet'] := Settings.CharacterSet;
+
+    AConnection.Params.Values['User_Name'] := Settings.UserName;
+    AConnection.Params.Values['Password'] := Settings.Password;
   finally
     Settings.Free;
   end;

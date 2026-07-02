@@ -12,7 +12,6 @@ type
   public
     procedure LoadSettings;
     procedure SaveSettings(const AServer, APort, ADBPath, ACharSet: string);
-
     property Settings: TDatabaseSettings read FSettings;
 
     constructor Create;
@@ -44,7 +43,6 @@ begin
   FSettings.Port := APort;
   FSettings.DatabasePath := ADBPath;
   FSettings.CharacterSet := ACharSet;
-
   TSettingsStorageService.Save(FSettings);
 end;
 

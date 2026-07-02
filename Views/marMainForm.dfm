@@ -73,7 +73,7 @@ object frmMain: TfrmMain
       Align = alClient
       TabOrder = 0
       object btnDBConnect: TcxButton
-        Left = 545
+        Left = 479
         Top = 12
         Width = 125
         Height = 65
@@ -94,10 +94,22 @@ object frmMain: TfrmMain
         ShowHint = True
         TabOrder = 0
       end
+      object btnSettings: TcxButton
+        Left = 611
+        Top = 12
+        Width = 125
+        Height = 65
+        Action = acSettingsEditor
+        OptionsImage.Layout = blGlyphTop
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 2
+      end
       object lcBottomControlsGroup_Root: TdxLayoutGroup
         AlignHorz = ahClient
         AlignVert = avClient
         Hidden = True
+        ItemIndex = 1
         LayoutDirection = ldHorizontal
         ShowBorder = False
         Index = -1
@@ -107,6 +119,7 @@ object frmMain: TfrmMain
         AlignHorz = ahCenter
         AlignVert = avClient
         CaptionOptions.Text = 'New Group'
+        ItemIndex = 1
         LayoutDirection = ldHorizontal
         ShowBorder = False
         Index = 1
@@ -156,6 +169,15 @@ object frmMain: TfrmMain
         CaptionOptions.Text = #1042#1077#1088#1089#1080#1103':'
         Index = 2
       end
+      object liSettings: TdxLayoutItem
+        Parent = lgDB
+        CaptionOptions.Visible = False
+        Control = btnSettings
+        ControlOptions.OriginalHeight = 65
+        ControlOptions.OriginalWidth = 125
+        ControlOptions.ShowBorder = False
+        Index = 1
+      end
     end
   end
   object panClientContainer: TcxGroupBox
@@ -186,7 +208,8 @@ object frmMain: TfrmMain
       OnExecute = acExitAppExecute
     end
     object acSettingsEditor: TAction
-      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080
+      Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099
+      ImageIndex = 19
       OnExecute = acSettingsEditorExecute
       OnUpdate = acSettingsEditorUpdate
     end

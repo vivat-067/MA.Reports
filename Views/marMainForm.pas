@@ -39,6 +39,8 @@ type
     panClientContainer: TcxGroupBox;
     liAppVersionInfo: TdxLayoutItem;
     acSettingsEditor: TAction;
+    liSettings: TdxLayoutItem;
+    btnSettings: TcxButton;
     procedure acDBConnectExecute(Sender: TObject);
     procedure acDBConnectUpdate(Sender: TObject);
     procedure acExitAppExecute(Sender: TObject);
