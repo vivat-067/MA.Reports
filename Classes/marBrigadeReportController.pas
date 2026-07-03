@@ -104,17 +104,13 @@ begin
     if Assigned(AOnComplete) then AOnComplete(False);
     Exit;
   end;
-
   FErrorStr := '';
   FIsLoading := True;
   FFilter := AFilter;
-
   //FireDAC в неблокирующий режим для работы с фоновым потоком
   FQuery.ResourceOptions.CmdExecMode := amNonBlocking;
-
   FQuery.DisableControls;
   FQuery.Close;
-
   try
     PrepareSQL;
   except
@@ -123,12 +119,10 @@ begin
       FErrorStr := E.Message;
       FQuery.EnableControls;
       FIsLoading := False;
-
       if Assigned(AOnComplete) then AOnComplete(False);
       Exit;
     end;
   end;
-
   TTask.Run(
     procedure
     var
@@ -142,7 +136,6 @@ begin
         on E: Exception do
            FErrorStr := rsGenerateError + E.Message;
       end;
-
       TThread.Synchronize(nil,
         procedure
         begin
@@ -154,7 +147,6 @@ begin
       );
     end
   );
-
 
 end;
 
